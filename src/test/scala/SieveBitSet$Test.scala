@@ -6,13 +6,7 @@ import org.scalatest.{FunSuite, ShouldMatchers}
 class SieveBitSet$Test extends FunSuite with ShouldMatchers {
 
   // instantiate object
-  val elapsed: Long = {
-    val start = System.currentTimeMillis()
-    SieveBitSet.getClass
-    val end: Long = System.currentTimeMillis() - start
-    println("%dms".format(end))
-    end
-  }
+  Timer.timeInMillisecond {SieveBitSet.getClass}
 
   test("testCountPrimesLessThan10") {
     SieveBitSet countPrimesLessThan 10 shouldEqual 4
