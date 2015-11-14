@@ -27,6 +27,4 @@ class SieveBitSet$Test extends FunSuite with ShouldMatchers {
   test("testCountPrimesLessThan100000") {
     SieveBitSet countPrimesLessThan 100000 shouldEqual 9592
   }
-
-  // test("some new test") (pending)
 }

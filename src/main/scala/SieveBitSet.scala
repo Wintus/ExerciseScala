@@ -4,7 +4,7 @@ import scala.collection.mutable
   * Created by Admin on 2015/11/11.
   */
 object SieveBitSet {
-  val sup: Int = 1000000
+  val sup: Int = 10000000
   // use foreach to run while loop
   val primes: List[Int] = {
     val toIndex: Int ⇒ Int = _ >> 1
@@ -22,13 +22,7 @@ object SieveBitSet {
   }
 
   def main(args: Array[String]) {
-    /*
-        println("Primes up to: " + sup)
-        println("Primes: %s".format(primes mkString ", "))
-        println("Number of Primes: %d / %d".format(primes length, sup))
-    */
     for (n ← Functional.iterate[Int](_ * 10, 1) takeWhile (_ <= sup))
-    //    for (n ← Functional.iterate[Int](_ << 1, 1) takeWhile (_ <= sup))
       println("Number of Primes: %5d / %7d".format(countPrimesLessThan(n), n))
   }
 
