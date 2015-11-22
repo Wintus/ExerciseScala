@@ -1,5 +1,7 @@
 package ArchitectureOfCollections
 
+import scala.collection.{IndexedSeqLike, mutable}
+
 abstract class Base
 
 case object A extends Base
@@ -19,9 +21,14 @@ object Base {
   * http://eed3si9n.github.io/scala-collections-impl-doc-ja/
   * Created by Admin on 2015/11/21.
   */
-final class RNA private(val groups: Array[Int], val length: Int) extends IndexedSeq[Base] {
+final class RNA private(val groups: Array[Int], val length: Int)
+  extends IndexedSeq[Base]
+  with IndexedSeqLike[Base, RNA] {
 
   import RNA._
+
+  override def newBuilder: mutable.Builder[Base, RNA] =
+    new mutable.ArrayBuffer[Base] mapResult fromSeq
 
   def apply(index: Int): Base = {
     if (index < 0 || length <= index) throw new IndexOutOfBoundsException
