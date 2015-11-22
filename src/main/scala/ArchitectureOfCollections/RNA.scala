@@ -1,6 +1,6 @@
 package ArchitectureOfCollections
 
-import scala.collection.{IndexedSeqLike, mutable}
+import scala.collection.{IndexedSeqLike, generic, mutable}
 
 abstract class Base
 
@@ -27,13 +27,29 @@ final class RNA private(val groups: Array[Int], val length: Int)
 
   import RNA._
 
-  override def newBuilder: mutable.Builder[Base, RNA] =
-    new mutable.ArrayBuffer[Base] mapResult fromSeq
-
+  // IndexedSeqLike requires
   def apply(index: Int): Base = {
     if (index < 0 || length <= index) throw new IndexOutOfBoundsException
     else Base.fromInt(groups(index / N) >> (index % N * S) & M)
   }
+
+  // reimplementation for efficiency
+  override def foreach[U](f: Base ⇒ U): Unit = {
+    var i = 0
+    var b = 0
+    while (i < length) {
+      b = if (i % N == 0) groups(i / N) else b >>> S
+      f(Base.fromInt(b & M))
+      i += 1
+    }
+  }
+
+  override def equals(other: Any) = canEqual(other) && super.equals(other)
+
+  override def canEqual(other: Any) = other.isInstanceOf[RNA]
+
+  // IndexedSeqLike requires
+  override protected[this] def newBuilder: mutable.Builder[Base, RNA] = RNA.newBuilder
 }
 
 object RNA {
@@ -45,6 +61,15 @@ object RNA {
   private val N = 32 / S
 
   def apply(bases: Base*) = fromSeq(bases)
+
+  implicit def cbf: generic.CanBuildFrom[RNA, Base, RNA] =
+    new generic.CanBuildFrom[RNA, Base, RNA] {
+      def apply(): mutable.Builder[Base, RNA] = newBuilder
+
+      def apply(from: RNA): mutable.Builder[Base, RNA] = newBuilder
+    }
+
+  def newBuilder: mutable.Builder[Base, RNA] = new mutable.ArrayBuffer[Base] mapResult fromSeq
 
   def fromSeq(buf: Seq[Base]): RNA = {
     val groups = new Array[Int]((buf.length + N - 1) / N)
