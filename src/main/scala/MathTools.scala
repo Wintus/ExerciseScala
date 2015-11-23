@@ -1,3 +1,5 @@
+import scala.annotation.tailrec
+
 /**
   * Created by Admin on 2015/11/05.
   */
@@ -10,13 +12,16 @@ object MathTools {
 
   def factorial(n: Int): BigInt = if (n == 0) 1 else n * factorial(n - 1)
 
+  @tailrec
   def factorialTCO(n: Long, acc: BigInt = 1): BigInt =
     if (n == 0) 1 else factorialTCO(n - 1, acc * n)
 
+  @tailrec
   def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 
   def lcd(a: Int, b: Int): Int = a * b / gcd(a, b)
 
+  @tailrec
   def sumBy(f: BigInt ⇒ BigInt, start: Int, end: Int, acc: BigInt = 0): BigInt =
     if (start > end) acc else sumBy(f, start + 1, end, acc + f(start))
 
@@ -26,6 +31,7 @@ object MathTools {
 
   def sumOfCube(n: Int, m: Int): BigInt = sumBy(x ⇒ x * x * x, n, m)
 
+  @tailrec
   def fibonacciTCO(n: Int, acc0: BigInt = 0, acc1: BigInt = 1): BigInt =
     if (n == 0) acc0 else fibonacciTCO(n - 1, acc0 + acc1, acc0)
 
